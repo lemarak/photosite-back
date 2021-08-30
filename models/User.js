@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 
+const LEVELS = ["débutant", "confirmé", "pro"];
+
 const User = mongoose.model("User", {
   email: {
     unique: true,
@@ -22,6 +24,7 @@ const User = mongoose.model("User", {
       type: mongoose.Schema.Types.Mixed,
       default: {},
     },
+    level: [{ type: String, enum: LEVELS }],
   },
   token: String,
   hash: String,
