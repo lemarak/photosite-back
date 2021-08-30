@@ -65,7 +65,24 @@ router.post("/user/signup", async (req, res) => {
 });
 
 // user login
-router.post("/user/login", (req, res) => {
+router.post("/user/login", async (req, res) => {
+  try {
+    const { email, password } = req.fields;
+    const user = await User.findOne({ email: email });
+    if (user) {
+      const hash = SHA256(password + user.salt).toString(encBase64);
+      if (hash !== user.hash) {
+        res.status(403).json({ message: "Mot de passe incorrect" });
+      } else {
+        res.status(200).json({ message: "Login OK" });
+      }
+    } else {
+      res.status(403).json({ message: "Utilisateur non connu" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+
   res.status(200).json({ message: "user logged" });
 });
 
