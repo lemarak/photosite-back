@@ -3,14 +3,15 @@ const uid2 = require("uid2");
 const SHA256 = require("crypto-js/sha256");
 const encBase64 = require("crypto-js/enc-base64");
 const router = express.Router();
+const cloudinary = require("cloudinary").v2;
 
 const User = require("../models/User");
 
-// user's list
+// users list
 router.get("/users", async (req, res) => {
   try {
     const users = await User.find();
-    res.status(200).json(users);
+    res.status(200).json({ count: users.length, users });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -55,6 +56,16 @@ router.post("/user/signup", async (req, res) => {
             level,
           },
         });
+        // cloudinary
+        if (req.files) {
+          const resultUpload = await cloudinary.uploader.upload(
+            req.files.avatar.path,
+            {
+              folder: `/photosite/users/${token}`,
+            }
+          );
+          newUser.account.avatar = resultUpload;
+        }
         await newUser.save();
         res.status(200).json(newUser);
       }
