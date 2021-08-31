@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const Photo = mongoose.model("Photo", {
+const Picture = mongoose.model("Picture", {
   title: {
     type: String,
     required: true,
@@ -16,4 +16,4 @@ const Photo = mongoose.model("Photo", {
   published: { type: Date, default: Date.now },
 });
 
-module.exports = Photo;
+module.exports = Picture;

@@ -24,6 +24,8 @@ cloudinary.config({
 // Routes
 const userRoutes = require("./routes/user");
 app.use(userRoutes);
+const pictureRoutes = require("./routes/picture");
+app.use(pictureRoutes);
 
 app.get("/", (req, res) => {
   res.status(200).json({ message: "Hello, welcome on PhoSite" });

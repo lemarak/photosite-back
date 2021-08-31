@@ -13,9 +13,8 @@ router.get("/users", async (req, res) => {
     const users = await User.find();
     res.status(200).json({ count: users.length, users });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ error: error.message });
   }
-  res.status(200).json({ message: "users list" });
 });
 
 // user signup
@@ -36,7 +35,6 @@ router.post("/user/signup", async (req, res) => {
     } else {
       const user = await User.findOne({ email: email });
       if (user) {
-        console.log(user);
         res.status(409).json({ error: "L'email existe déjà" });
       } else {
         const salt = uid2(16);
@@ -57,7 +55,7 @@ router.post("/user/signup", async (req, res) => {
           },
         });
         // cloudinary
-        if (req.files) {
+        if (req.files.avatar.size) {
           const resultUpload = await cloudinary.uploader.upload(
             req.files.avatar.path,
             {
@@ -71,7 +69,7 @@ router.post("/user/signup", async (req, res) => {
       }
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -91,10 +89,8 @@ router.post("/user/login", async (req, res) => {
       res.status(403).json({ message: "Utilisateur non connu" });
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ error: error.message });
   }
-
-  res.status(200).json({ message: "user logged" });
 });
 
 module.exports = router;
