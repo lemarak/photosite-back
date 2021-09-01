@@ -77,6 +77,7 @@ router.post("/user/update", isAuthenticated, async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
 // user delete
 router.delete("/user/delete", async (req, res) => {
   try {

@@ -13,6 +13,7 @@ const Picture = mongoose.model("Picture", {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
+  categories: [{ type: mongoose.Schema.Types.ObjectId, ref: "Category" }],
   published: { type: Date, default: Date.now },
 });
 
