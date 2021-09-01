@@ -4,6 +4,7 @@ const SHA256 = require("crypto-js/sha256");
 const encBase64 = require("crypto-js/enc-base64");
 const router = express.Router();
 const cloudinary = require("cloudinary").v2;
+const slugify = require("slugify");
 
 const User = require("../models/User");
 
@@ -30,12 +31,17 @@ router.post("/user/signup", async (req, res) => {
       password,
       level,
     } = req.fields;
+    console.log(username, email);
     if (!email || !username || !password) {
       res.status(400).json({ error: "Données manquantes" });
     } else {
-      const user = await User.findOne({ email: email });
-      if (user) {
-        res.status(409).json({ error: "L'email existe déjà" });
+      const user = await User.find().or([
+        { email },
+        { "account.username": username },
+      ]);
+      if (user.length > 0) {
+        console.log("*******", user);
+        res.status(409).json({ error: "L'utilisateur existe déjà" });
       } else {
         const salt = uid2(16);
         const hash = SHA256(password + salt).toString(encBase64);
@@ -59,7 +65,7 @@ router.post("/user/signup", async (req, res) => {
           const resultUpload = await cloudinary.uploader.upload(
             req.files.avatar.path,
             {
-              folder: `/photosite/users/${token}`,
+              folder: `/photosite/users/${slugify(username)}`,
             }
           );
           newUser.account.avatar = resultUpload;

@@ -1,5 +1,6 @@
 const express = require("express");
 const cloudinary = require("cloudinary").v2;
+const slugify = require("slugify");
 
 const router = express.Router();
 
@@ -28,10 +29,11 @@ router.post("/picture/publish", isAuthenticated, async (req, res) => {
     }
     // fields ok
     const newPicture = new Picture({ title });
+    newPicture.owner = req.user;
     const resultUpload = await cloudinary.uploader.upload(
       req.files.picture.path,
       {
-        folder: `/photosite/pictures`,
+        folder: `/photosite/pictures/${slugify(req.user.account.username)}`,
       }
     );
     newPicture.picture = resultUpload;
