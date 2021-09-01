@@ -9,6 +9,12 @@ const User = mongoose.model("User", {
   },
   account: {
     username: {
+      unique: true,
+      required: true,
+      type: String,
+    },
+    slug: {
+      unique: true,
       required: true,
       type: String,
     },

@@ -8,6 +8,21 @@ const slugify = require("slugify");
 
 const User = require("../models/User");
 
+// one user
+router.get("/user/:slug", async (req, res) => {
+  console.log(req.params);
+  try {
+    const user = await User.findOne({ slug: req.params.slug });
+    if (user) {
+      res.status(200).json(user);
+    } else {
+      res.status(404).json({ error: "Utilisateur non trouvé" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // users list
 router.get("/users", async (req, res) => {
   try {
@@ -31,21 +46,23 @@ router.post("/user/signup", async (req, res) => {
       password,
       level,
     } = req.fields;
-    console.log(username, email);
+
     if (!email || !username || !password) {
       res.status(400).json({ error: "Données manquantes" });
     } else {
+      const slug = slugify(username);
       const user = await User.find().or([
         { email },
         { "account.username": username },
+        { "account.slug": slug },
       ]);
       if (user.length > 0) {
-        console.log("*******", user);
         res.status(409).json({ error: "L'utilisateur existe déjà" });
       } else {
         const salt = uid2(16);
         const hash = SHA256(password + salt).toString(encBase64);
         const token = uid2(16);
+
         const newUser = new User({
           email,
           token,
@@ -53,6 +70,7 @@ router.post("/user/signup", async (req, res) => {
           salt,
           account: {
             username,
+            slug,
             firstname,
             lastname,
             city,
