@@ -6,6 +6,8 @@ const router = express.Router();
 const cloudinary = require("cloudinary").v2;
 const slugify = require("slugify");
 
+const isAuthenticated = require("../middleware/isAuthenticated");
+
 const User = require("../models/User");
 
 // one user
@@ -28,6 +30,62 @@ router.get("/users", async (req, res) => {
   try {
     const users = await User.find();
     res.status(200).json({ count: users.length, users });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// user update
+router.post("/user/update", isAuthenticated, async (req, res) => {
+  try {
+    const { firstname, lastname, city, phone, level } = req.fields;
+
+    const user = await User.findOne({ token: req.user.token });
+    if (user) {
+      if (firstname) {
+        user.account.firstname = firstname;
+      }
+      if (lastname) {
+        user.account.lastname = lastname;
+      }
+      if (city) {
+        user.account.city = city;
+      }
+      if (phone) {
+        user.account.phone = phone;
+      }
+      if (level) {
+        user.account.level = level;
+      }
+      // cloudinary
+      console.log(req.files.avatar);
+      if (req.files.avatar.size > 0) {
+        const resultUpload = await cloudinary.uploader.upload(
+          req.files.avatar.path,
+          {
+            folder: `/photosite/users/${user.account.slug}`,
+          }
+        );
+        user.account.avatar = resultUpload;
+      }
+      await user.save();
+      res.status(200).json(user);
+    } else {
+      res.status(404).json({ error: "Utilisateur non trouvé" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+// user delete
+router.delete("/user/delete", async (req, res) => {
+  try {
+    if (req.fields.id) {
+      await User.findByIdAndDelete(req.fields.id);
+      res.status(200).json({ message: "Utilisateur supprimé" });
+    } else {
+      res.status(500).json({ error: error.message });
+    }
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
