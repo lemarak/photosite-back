@@ -5,6 +5,7 @@ const slugify = require("slugify");
 const router = express.Router();
 
 const Picture = require("../models/Picture");
+const Category = require("../models/Category");
 const isAuthenticated = require("../middleware/isAuthenticated");
 
 router.get("/pictures", async (req, res) => {
@@ -22,13 +23,21 @@ router.post("/picture/publish", isAuthenticated, async (req, res) => {
     if (!req.files.picture.size) {
       return res.status("400").json({ message: "no picture" });
     }
-    const { title, owner } = req.fields;
+    const { title } = req.fields;
+
+    let categories;
+    if (req.fields.categories) {
+      categories = req.fields.categories.split(",");
+    } else {
+      categories = [];
+    }
+
     // missing fields
     if (!title) {
       return res.status("400").json({ message: "missing fields" });
     }
     // fields ok
-    const newPicture = new Picture({ title });
+    const newPicture = new Picture({ title, categories });
     newPicture.owner = req.user;
     const resultUpload = await cloudinary.uploader.upload(
       req.files.picture.path,
@@ -39,6 +48,10 @@ router.post("/picture/publish", isAuthenticated, async (req, res) => {
     newPicture.picture = resultUpload;
 
     await newPicture.save();
+
+    // update Category
+    // ****** TODO ********
+
     res.status(200).json(newPicture);
   } catch (error) {
     res.status(500).json({ error: error.message });
