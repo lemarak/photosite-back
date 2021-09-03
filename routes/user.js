@@ -95,16 +95,7 @@ router.delete("/user/delete", async (req, res) => {
 // user signup
 router.post("/user/signup", async (req, res) => {
   try {
-    const {
-      email,
-      username,
-      firstname,
-      lastname,
-      city,
-      phone,
-      password,
-      level,
-    } = req.fields;
+    const { email, username, password } = req.fields;
 
     if (!email || !username || !password) {
       res.status(400).json({ error: "Données manquantes" });
@@ -115,6 +106,7 @@ router.post("/user/signup", async (req, res) => {
         { "account.username": username },
         { "account.slug": slug },
       ]);
+
       if (user.length > 0) {
         res.status(409).json({ error: "L'utilisateur existe déjà" });
       } else {
@@ -130,23 +122,24 @@ router.post("/user/signup", async (req, res) => {
           account: {
             username,
             slug,
-            firstname,
-            lastname,
-            city,
-            phone,
-            level,
+            // firstname,
+            // lastname,
+            // city,
+            // phone,
+            // level,
           },
         });
+        console.log(newUser);
         // cloudinary
-        if (req.files.avatar.size) {
-          const resultUpload = await cloudinary.uploader.upload(
-            req.files.avatar.path,
-            {
-              folder: `/photosite/users/${slugify(username)}`,
-            }
-          );
-          newUser.account.avatar = resultUpload;
-        }
+        // if (req.files.avatar.size) {
+        //   const resultUpload = await cloudinary.uploader.upload(
+        //     req.files.avatar.path,
+        //     {
+        //       folder: `/photosite/users/${slugify(username)}`,
+        //     }
+        //   );
+        //   newUser.account.avatar = resultUpload;
+        // }
         await newUser.save();
         res.status(200).json(newUser);
       }

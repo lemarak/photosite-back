@@ -1,5 +1,7 @@
 const express = require("express");
 const formidable = require("express-formidable");
+const cors = require("cors");
+
 const mongoose = require("mongoose");
 const cloudinary = require("cloudinary").v2;
 require("dotenv").config();
@@ -7,6 +9,7 @@ require("dotenv").config();
 const app = express();
 
 app.use(formidable());
+app.use(cors());
 
 // mongoose
 mongoose.connect(process.env.MONGODB_URI, {
