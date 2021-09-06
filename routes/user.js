@@ -159,7 +159,7 @@ router.post("/user/login", async (req, res) => {
       if (hash !== user.hash) {
         res.status(403).json({ message: "Mot de passe incorrect" });
       } else {
-        res.status(200).json({ message: "Login OK" });
+        res.status(200).json({ token: user.token });
       }
     } else {
       res.status(403).json({ message: "Utilisateur non connu" });
