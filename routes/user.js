@@ -12,9 +12,9 @@ const User = require("../models/User");
 
 // one user
 router.get("/user/:slug", async (req, res) => {
-  console.log(req.params);
+  console.log("params", req.params);
   try {
-    const user = await User.findOne({ slug: req.params.slug });
+    const user = await User.findOne({ "account.slug": req.params.slug });
     if (user) {
       res.status(200).json(user);
     } else {
@@ -58,16 +58,16 @@ router.post("/user/update", isAuthenticated, async (req, res) => {
         user.account.level = level;
       }
       // cloudinary
-      console.log(req.files.avatar);
-      if (req.files.avatar.size > 0) {
-        const resultUpload = await cloudinary.uploader.upload(
-          req.files.avatar.path,
-          {
-            folder: `/photosite/users/${user.account.slug}`,
-          }
-        );
-        user.account.avatar = resultUpload;
-      }
+      // console.log(req.files.avatar);
+      // if (req.files.avatar.size > 0) {
+      //   const resultUpload = await cloudinary.uploader.upload(
+      //     req.files.avatar.path,
+      //     {
+      //       folder: `/photosite/users/${user.account.slug}`,
+      //     }
+      //   );
+      //   user.account.avatar = resultUpload;
+      // }
       await user.save();
       res.status(200).json(user);
     } else {
@@ -159,7 +159,7 @@ router.post("/user/login", async (req, res) => {
       if (hash !== user.hash) {
         res.status(403).json({ message: "Mot de passe incorrect" });
       } else {
-        res.status(200).json({ token: user.token });
+        res.status(200).json({ user });
       }
     } else {
       res.status(403).json({ message: "Utilisateur non connu" });
