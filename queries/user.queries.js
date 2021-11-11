@@ -53,7 +53,6 @@ exports.createUser = (fields, slug, token, hash, salt) => {
   //   newUser.account.avatar = resultUpload;
   // }
 
-  console.log(newUser);
   return User.create(newUser);
 };
 

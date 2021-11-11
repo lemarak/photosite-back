@@ -1,15 +1,20 @@
-const Category = require("../database/models/Category");
+const {
+  createCategory,
+  getCategories,
+  getCategoryByTitle,
+  getCategoryById,
+  updateCategory,
+} = require("../queries/category.queries");
 
 // Create category
 exports.createCategory = async (req, res) => {
   try {
     const { title } = req.fields;
-    const category = await Category.findOne({ title });
+    const category = await getCategoryByTitle(title);
     if (category) {
       return res.status(409).json({ error: "La catégorie existe" });
     }
-    const newCategory = new Category({ title });
-    newCategory.save();
+    const newCategory = await createCategory(title);
     res.status(200).json(newCategory);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -19,7 +24,7 @@ exports.createCategory = async (req, res) => {
 // list categories
 exports.listCategories = async (req, res) => {
   try {
-    const categories = await Category.find();
+    const categories = await getCategories();
     return res.status(200).json({ count: categories.length, categories });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -31,10 +36,9 @@ exports.updateCategory = async (req, res) => {
   try {
     const { id, title } = req.fields;
     if (title && id) {
-      const category = await Category.findById(req.fields.id);
+      const category = await getCategoryById(id);
       if (category) {
-        category.title = title;
-        await category.save();
+        await updateCategory(category, title);
         res.status(200).json(category);
       } else {
         res.status(409).json({ error: "Pas de catégorie" });
