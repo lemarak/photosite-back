@@ -1,6 +1,4 @@
 const express = require("express");
-const cloudinary = require("cloudinary").v2;
-const slugify = require("slugify");
 
 const router = express.Router();
 

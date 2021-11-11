@@ -1,10 +1,9 @@
-const Picture = require("../database/models/Picture");
-const Category = require("../database/models/Category");
+const { getPictures, createPicture } = require("../queries/picture.queries");
 
 // list pictures
 exports.listPictures = async (req, res) => {
   try {
-    const pictures = await Picture.find();
+    const pictures = await getPictures();
     res.status(200).json({ count: pictures.length, pictures });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -20,29 +19,13 @@ exports.publishPicture = async (req, res) => {
     }
     const { title } = req.fields;
 
-    let categories;
-    if (req.fields.categories) {
-      categories = req.fields.categories.split(",");
-    } else {
-      categories = [];
-    }
-
     // missing fields
     if (!title) {
       return res.status("400").json({ message: "missing fields" });
     }
     // fields ok
-    const newPicture = new Picture({ title, categories });
-    newPicture.owner = req.user;
-    const resultUpload = await cloudinary.uploader.upload(
-      req.files.picture.path,
-      {
-        folder: `/photosite/pictures/${slugify(req.user.account.username)}`,
-      }
-    );
-    newPicture.picture = resultUpload;
 
-    await newPicture.save();
+    const newPicture = await createPicture(req.fields, req.user, req.files);
 
     // update Category
     // ****** TODO ********
