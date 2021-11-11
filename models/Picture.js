@@ -1,20 +1,25 @@
 const mongoose = require("mongoose");
+const schema = mongoose.Schema;
 
-const Picture = mongoose.model("Picture", {
-  title: {
-    type: String,
-    required: true,
+const pictureSchema = schema(
+  {
+    title: {
+      type: String,
+      required: true,
+    },
+    picture: {
+      type: mongoose.Schema.Types.Mixed,
+      default: {},
+    },
+    owner: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+    categories: [{ type: mongoose.Schema.Types.ObjectId, ref: "Category" }],
   },
-  picture: {
-    type: mongoose.Schema.Types.Mixed,
-    default: {},
-  },
-  owner: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-  },
-  categories: [{ type: mongoose.Schema.Types.ObjectId, ref: "Category" }],
-  published: { type: Date, default: Date.now },
-});
+  { timestamps: true }
+);
+
+const Picture = mongoose.model("Picture", pictureSchema);
 
 module.exports = Picture;
