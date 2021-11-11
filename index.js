@@ -2,20 +2,14 @@ const express = require("express");
 const formidable = require("express-formidable");
 const cors = require("cors");
 
-const mongoose = require("mongoose");
 const cloudinary = require("cloudinary").v2;
 require("dotenv").config();
+require("./database");
 
 const app = express();
 
 app.use(formidable());
 app.use(cors());
-
-// mongoose
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
 
 // cloudinary
 cloudinary.config({
