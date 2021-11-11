@@ -1,12 +1,20 @@
 const User = require("../database/models/User");
 
 // queries
-const { getUser } = require("../queries/user.queries");
+const {
+  getUserBySlug,
+  getUserByToken,
+  getUserByMail,
+  getUserWithOr,
+  getUsers,
+  updateUser,
+  deleteUser,
+} = require("../queries/user.queries");
 
 // One user
 exports.userDetails = async (req, res) => {
   try {
-    const user = await User.findOne({ "account.slug": req.params.slug });
+    const user = await getUserBySlug(req.params.slug);
     if (user) {
       res.status(200).json(user);
     } else {
@@ -20,7 +28,7 @@ exports.userDetails = async (req, res) => {
 // users list
 exports.userList = async (req, res) => {
   try {
-    const users = await User.find();
+    const users = getUsers();
     res.status(200).json({ count: users.length, users });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -30,37 +38,9 @@ exports.userList = async (req, res) => {
 // user update
 exports.userUpdate = async (req, res) => {
   try {
-    const { firstname, lastname, city, phone, level } = req.fields;
-
-    const user = await User.findOne({ token: req.user.token });
+    const user = await getUserByToken(req.user.token);
     if (user) {
-      if (firstname) {
-        user.account.firstname = firstname;
-      }
-      if (lastname) {
-        user.account.lastname = lastname;
-      }
-      if (city) {
-        user.account.city = city;
-      }
-      if (phone) {
-        user.account.phone = phone;
-      }
-      if (level) {
-        user.account.level = level;
-      }
-      // cloudinary
-      // console.log(req.files.avatar);
-      // if (req.files.avatar.size > 0) {
-      //   const resultUpload = await cloudinary.uploader.upload(
-      //     req.files.avatar.path,
-      //     {
-      //       folder: `/photosite/users/${user.account.slug}`,
-      //     }
-      //   );
-      //   user.account.avatar = resultUpload;
-      // }
-      await user.save();
+      await updateUser(req.fields, user);
       res.status(200).json(user);
     } else {
       res.status(404).json({ error: "Utilisateur non trouvé" });
@@ -74,10 +54,10 @@ exports.userUpdate = async (req, res) => {
 exports.userDelete = async (req, res) => {
   try {
     if (req.fields.id) {
-      await User.findByIdAndDelete(req.fields.id);
+      await deleteUser(req.fields.id);
       res.status(200).json({ message: "Utilisateur supprimé" });
     } else {
-      res.status(500).json({ error: error.message });
+      res.status(500).json({ error: "Pas d'utilisateurs avec l'id" });
     }
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -93,11 +73,7 @@ exports.userSignup = async (req, res) => {
       res.status(400).json({ error: "Données manquantes" });
     } else {
       const slug = slugify(username);
-      const user = await User.find().or([
-        { email },
-        { "account.username": username },
-        { "account.slug": slug },
-      ]);
+      const user = await getUserWithOr(email, username, slug);
 
       if (user.length > 0) {
         res.status(409).json({ error: "L'utilisateur existe déjà" });
@@ -144,7 +120,7 @@ exports.userSignup = async (req, res) => {
 exports.userLogin = async (req, res) => {
   try {
     const { email, password } = req.fields;
-    const user = await User.findOne({ email: email });
+    const user = await getUserByMail(email);
     if (user) {
       const hash = SHA256(password + user.salt).toString(encBase64);
       if (hash !== user.hash) {
