@@ -1,7 +1,9 @@
+const cloudinary = require("cloudinary").v2;
+
 const User = require("../database/models/User");
 
 exports.getUserBySlug = (slug) => {
-  return User.findOne({ "account.slug": req.params.slug }).exec();
+  return User.findOne({ "account.slug": slug }).exec();
 };
 
 exports.getUserByToken = (token) => {
@@ -19,7 +21,40 @@ exports.getUserWithOr = (email, username, slug) => {
 };
 
 exports.getUsers = () => {
-  return User.find().exec();
+  return User.find({});
+};
+
+exports.createUser = (fields, slug, token, hash, salt) => {
+  const { email, username } = fields;
+  const newUser = new User({
+    email,
+    token,
+    hash,
+    salt,
+    account: {
+      username,
+      slug,
+      // firstname,
+      // lastname,
+      // city,
+      // phone,
+      // level,
+    },
+  });
+
+  // cloudinary
+  // if (req.files.avatar.size) {
+  //   const resultUpload = await cloudinary.uploader.upload(
+  //     req.files.avatar.path,
+  //     {
+  //       folder: `/photosite/users/${slugify(username)}`,
+  //     }
+  //   );
+  //   newUser.account.avatar = resultUpload;
+  // }
+
+  console.log(newUser);
+  return User.create(newUser);
 };
 
 exports.updateUser = (fields, user) => {

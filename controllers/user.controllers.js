@@ -1,4 +1,8 @@
-const User = require("../database/models/User");
+const uid2 = require("uid2");
+const SHA256 = require("crypto-js/sha256");
+const encBase64 = require("crypto-js/enc-base64");
+
+const slugify = require("slugify");
 
 // queries
 const {
@@ -7,6 +11,7 @@ const {
   getUserByMail,
   getUserWithOr,
   getUsers,
+  createUser,
   updateUser,
   deleteUser,
 } = require("../queries/user.queries");
@@ -28,7 +33,8 @@ exports.userDetails = async (req, res) => {
 // users list
 exports.userList = async (req, res) => {
   try {
-    const users = getUsers();
+    // console.log("req", req);
+    const users = await getUsers();
     res.status(200).json({ count: users.length, users });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -82,33 +88,7 @@ exports.userSignup = async (req, res) => {
         const hash = SHA256(password + salt).toString(encBase64);
         const token = uid2(16);
 
-        const newUser = new User({
-          email,
-          token,
-          hash,
-          salt,
-          account: {
-            username,
-            slug,
-            // firstname,
-            // lastname,
-            // city,
-            // phone,
-            // level,
-          },
-        });
-        console.log(newUser);
-        // cloudinary
-        // if (req.files.avatar.size) {
-        //   const resultUpload = await cloudinary.uploader.upload(
-        //     req.files.avatar.path,
-        //     {
-        //       folder: `/photosite/users/${slugify(username)}`,
-        //     }
-        //   );
-        //   newUser.account.avatar = resultUpload;
-        // }
-        await newUser.save();
+        const newUser = await createUser(req.fields, slug, token, hash, salt);
         res.status(200).json(newUser);
       }
     }
@@ -117,6 +97,7 @@ exports.userSignup = async (req, res) => {
   }
 };
 
+// Login
 exports.userLogin = async (req, res) => {
   try {
     const { email, password } = req.fields;
