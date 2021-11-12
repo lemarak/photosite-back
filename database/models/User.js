@@ -6,19 +6,22 @@ const LEVELS = ["débutant", "confirmé", "pro"];
 const userSchema = schema(
   {
     email: {
-      unique: true,
       type: String,
+      unique: true,
+      required: [true, "L'email est obligatoire"],
     },
     account: {
       username: {
-        unique: true,
-        required: true,
         type: String,
+        unique: true,
+        required: [true, "Le pseudo est obligatoire"],
+        minlength: [3, "Le pseudo doit avoir au moins 3 caractères"],
+        maxlength: [49, "Le pseudo doit avoir moins de 50 caractères"],
       },
       slug: {
+        type: String,
         unique: true,
         required: true,
-        type: String,
       },
       firstname: {
         type: String,

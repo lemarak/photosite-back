@@ -5,7 +5,9 @@ const pictureSchema = schema(
   {
     title: {
       type: String,
-      required: true,
+      required: [true, "Le titre est obligatoire"],
+      minlength: [3, "Le titre doit avoir au moins 3 caractères"],
+      maxlength: [49, "Le titre doit avoir moins de 50 caractères"],
     },
     picture: {
       type: mongoose.Schema.Types.Mixed,
