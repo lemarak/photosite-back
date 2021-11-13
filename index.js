@@ -26,6 +26,24 @@ app.use(pictureRoutes);
 const categoryRoutes = require("./routes/category");
 app.use(categoryRoutes);
 
+// Middleware Error
+app.use((err, req, res, next) => {
+  const env = process.env.NODE_ENV;
+  console.error("Error");
+  if (env === "developpment") {
+    res.status(500).json({
+      code: err.code || 500,
+      message: err.message,
+      stack: err.stack,
+    });
+  } else {
+    res.status(500).json({
+      code: err.code || 500,
+      message: err.message,
+    });
+  }
+});
+
 app.get("/", (req, res) => {
   res.status(200).json({ message: "Hello, welcome on PhoSite" });
 });

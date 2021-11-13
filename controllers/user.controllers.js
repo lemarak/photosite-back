@@ -17,7 +17,7 @@ const {
 } = require("../queries/user.queries");
 
 // One user
-exports.userDetails = async (req, res) => {
+exports.userDetails = async (req, res, next) => {
   try {
     const user = await getUserBySlug(req.params.slug);
     if (user) {
@@ -26,23 +26,23 @@ exports.userDetails = async (req, res) => {
       res.status(404).json({ error: "Utilisateur non trouvé" });
     }
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
 // users list
-exports.userList = async (req, res) => {
+exports.userList = async (req, res, next) => {
   try {
     // console.log("req", req);
     const users = await getUsers();
     res.status(200).json({ count: users.length, users });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
 // user update
-exports.userUpdate = async (req, res) => {
+exports.userUpdate = async (req, res, next) => {
   try {
     const user = await getUserByToken(req.user.token);
     if (user) {
@@ -52,12 +52,12 @@ exports.userUpdate = async (req, res) => {
       res.status(404).json({ error: "Utilisateur non trouvé" });
     }
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
 // user Delete
-exports.userDelete = async (req, res) => {
+exports.userDelete = async (req, res, next) => {
   try {
     if (req.fields.id) {
       await deleteUser(req.fields.id);
@@ -66,12 +66,12 @@ exports.userDelete = async (req, res) => {
       res.status(500).json({ error: "Pas d'utilisateurs avec l'id" });
     }
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
 // user Signup
-exports.userSignup = async (req, res) => {
+exports.userSignup = async (req, res, next) => {
   try {
     const { email, username, password } = req.fields;
 
@@ -93,12 +93,12 @@ exports.userSignup = async (req, res) => {
       }
     }
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
 // Login
-exports.userLogin = async (req, res) => {
+exports.userLogin = async (req, res, next) => {
   try {
     const { email, password } = req.fields;
     const user = await getUserByMail(email);
@@ -113,6 +113,6 @@ exports.userLogin = async (req, res) => {
       res.status(403).json({ message: "Utilisateur non connu" });
     }
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };

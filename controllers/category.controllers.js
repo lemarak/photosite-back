@@ -7,7 +7,7 @@ const {
 } = require("../queries/category.queries");
 
 // Create category
-exports.createCategory = async (req, res) => {
+exports.createCategory = async (req, res, next) => {
   try {
     const { title } = req.fields;
     const category = await getCategoryByTitle(title);
@@ -17,17 +17,17 @@ exports.createCategory = async (req, res) => {
     const newCategory = await createCategory(title);
     res.status(200).json(newCategory);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
 // list categories
-exports.listCategories = async (req, res) => {
+exports.listCategories = async (req, res, next) => {
   try {
     const categories = await getCategories();
     return res.status(200).json({ count: categories.length, categories });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 

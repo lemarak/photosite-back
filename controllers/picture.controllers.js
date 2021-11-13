@@ -1,17 +1,17 @@
 const { getPictures, createPicture } = require("../queries/picture.queries");
 
 // list pictures
-exports.listPictures = async (req, res) => {
+exports.listPictures = async (req, res, next) => {
   try {
     const pictures = await getPictures();
     res.status(200).json({ count: pictures.length, pictures });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
 // publish picture
-exports.publishPicture = async (req, res) => {
+exports.publishPicture = async (req, res, next) => {
   try {
     // no picture
     if (!req.files.picture.size) {
@@ -32,6 +32,6 @@ exports.publishPicture = async (req, res) => {
 
     res.status(200).json(newPicture);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
