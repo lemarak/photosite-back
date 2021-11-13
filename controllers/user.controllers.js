@@ -1,8 +1,8 @@
 const uid2 = require("uid2");
 const SHA256 = require("crypto-js/sha256");
 const encBase64 = require("crypto-js/enc-base64");
-
 const slugify = require("slugify");
+const createError = require("http-errors");
 
 // queries
 const {
@@ -23,7 +23,8 @@ exports.userDetails = async (req, res, next) => {
     if (user) {
       res.status(200).json(user);
     } else {
-      res.status(404).json({ error: "Utilisateur non trouvé" });
+      throw createError(404, "Utilisateur non trouvé");
+      // res.status(404).json({ error: "Utilisateur non trouvé" });
     }
   } catch (error) {
     next(error);
@@ -49,7 +50,8 @@ exports.userUpdate = async (req, res, next) => {
       await updateUser(req.fields, user);
       res.status(200).json(user);
     } else {
-      res.status(404).json({ error: "Utilisateur non trouvé" });
+      throw createError(404, "Utilisateur non trouvé");
+      // res.status(404).json({ error: "Utilisateur non trouvé" });
     }
   } catch (error) {
     next(error);
@@ -63,7 +65,8 @@ exports.userDelete = async (req, res, next) => {
       await deleteUser(req.fields.id);
       res.status(200).json({ message: "Utilisateur supprimé" });
     } else {
-      res.status(500).json({ error: "Pas d'utilisateurs avec l'id" });
+      throw createError(404, "Utilisateur non trouvé");
+      // res.status(500).json({ error: "Pas d'utilisateurs avec l'id" });
     }
   } catch (error) {
     next(error);
@@ -110,7 +113,8 @@ exports.userLogin = async (req, res, next) => {
         res.status(200).json({ user });
       }
     } else {
-      res.status(403).json({ message: "Utilisateur non connu" });
+      throw createError(404, "Utilisateur non connu");
+      // res.status(403).json({ message: "Utilisateur non connu" });
     }
   } catch (error) {
     next(error);

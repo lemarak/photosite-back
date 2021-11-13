@@ -16,8 +16,10 @@
     "cors": "^2.8.5",
     "crypto-js": "^4.1.1",
     "dotenv": "^10.0.0",
+    "errorhandler": "^1.5.1",
     "express": "^4.17.1",
     "express-formidable": "^1.2.0",
+    "http-errors": "^1.7.2",
     "mongoose": "^6.0.2",
     "slugify": "^1.6.0",
     "uid2": "^1.0.0"

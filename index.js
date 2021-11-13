@@ -1,7 +1,7 @@
 const express = require("express");
 const formidable = require("express-formidable");
 const cors = require("cors");
-
+const errorHandler = require("errorHandler");
 const cloudinary = require("cloudinary").v2;
 require("dotenv").config();
 require("./database");
@@ -27,16 +27,15 @@ const categoryRoutes = require("./routes/category");
 app.use(categoryRoutes);
 
 // Middleware Error
+
+if (process.env.NODE_ENV === "developpment") {
+  app.use(errorHandler());
+}
+
 app.use((err, req, res, next) => {
   const env = process.env.NODE_ENV;
   console.error("Error");
-  if (env === "developpment") {
-    res.status(500).json({
-      code: err.code || 500,
-      message: err.message,
-      stack: err.stack,
-    });
-  } else {
+  if (env === "production") {
     res.status(500).json({
       code: err.code || 500,
       message: err.message,
