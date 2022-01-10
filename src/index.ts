@@ -1,16 +1,14 @@
-import express, { Request, Response } from "express";
+import express, { Application, Request, Response } from "express";
 import formidable from "express-formidable";
 import cors from "cors";
 import errorHandler from "errorHandler";
 // const cloudinary = require("cloudinary").v2;
 import * as cloudinary from "cloudinary";
-import * as dotenv from "dotenv";
+import "dotenv/config";
 import "./database";
 
-dotenv.config();
-console.log("Coucou");
-const app = express();
-
+const app: Application = express();
+const port: string | number = process.env.PORT || 3100;
 app.use(formidable());
 app.use(cors());
 
@@ -54,6 +52,6 @@ app.get("*", (_: Request, res: Response) => {
   res.status(404).json({ error: "Photosite : lost" });
 });
 
-app.listen(process.env.PORT, () => {
+app.listen(port, () => {
   console.log("Server Photosite has started");
 });
