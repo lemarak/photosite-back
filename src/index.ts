@@ -1,11 +1,12 @@
 import express, { Application, Request, Response } from "express";
 import formidable from "express-formidable";
 import cors from "cors";
-import errorHandler from "errorHandler";
+import errorHandler from "errorhandler";
 // const cloudinary = require("cloudinary").v2;
 import * as cloudinary from "cloudinary";
 import "dotenv/config";
 import "./database";
+import index from "./routes";
 
 const app: Application = express();
 const port: string | number = process.env.PORT || 3100;
@@ -20,12 +21,7 @@ cloudinary.v2.config({
 });
 
 // Routes
-import userRoutes from "./routes/user";
-app.use(userRoutes);
-import pictureRoutes from "./routes/picture";
-app.use(pictureRoutes);
-import categoryRoutes from "./routes/category";
-app.use(categoryRoutes);
+app.use(index);
 
 // Middleware Error
 

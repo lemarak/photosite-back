@@ -1,4 +1,4 @@
-const express = require("express");
+import express from "express";
 
 const router = express.Router();
 
@@ -15,4 +15,4 @@ router.get("/pictures", listPictures);
 // publish picture
 router.post("/picture/publish", isAuthenticated, publishPicture);
 
-module.exports = router;
+export default router;

@@ -1,6 +1,6 @@
-const express = require("express");
-const cloudinary = require("cloudinary").v2;
-const slugify = require("slugify");
+import express from "express";
+// const cloudinary = require("cloudinary").v2;
+// const slugify = require("slugify");
 
 const router = express.Router();
 
@@ -20,4 +20,4 @@ router.get("/categories", listCategories);
 //update
 router.post("/category/update", updateCategory);
 
-module.exports = router;
+export default router;

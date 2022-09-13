@@ -33,6 +33,6 @@
     "@types/nodemon": "^1.19.1",
     "jest": "^27.1.0",
     "nodemon": "^2.0.15",
-    "typescript": "^4.5.4"
+    "typescript": "^4.8.3"
   }
 }

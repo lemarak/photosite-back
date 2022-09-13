@@ -1,4 +1,4 @@
-const express = require("express");
+import express from "express";
 
 const router = express.Router();
 
@@ -31,4 +31,4 @@ router.post("/user/signup", userSignup);
 // user login
 router.post("/user/login", userLogin);
 
-module.exports = router;
+export default router;
