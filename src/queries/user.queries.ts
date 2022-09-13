@@ -1,7 +1,7 @@
 const cloudinary = require("cloudinary").v2;
 
 import { User } from "../database/models/User";
-import { IUser } from "../interfaces";
+import { IUser, UserFormCreate, UserFormUpdate } from "../interfaces";
 
 export const getUserBySlug = (slug: string) => {
   return User.findOne({ "account.slug": slug }).exec();
@@ -30,7 +30,7 @@ export const getUsers = () => {
 };
 
 export const createUser = (
-  fields,
+  fields: UserFormCreate,
   slug: string,
   token: string,
   hash: string,
@@ -67,7 +67,7 @@ export const createUser = (
   return User.create(newUser);
 };
 
-export const updateUser = (fields, user) => {
+export const updateUser = (fields: UserFormUpdate, user: IUser) => {
   const { firstname, lastname, city, phone, level } = fields;
   if (firstname) {
     user.account.firstname = firstname;
@@ -99,6 +99,6 @@ export const updateUser = (fields, user) => {
   return user.save();
 };
 
-export const deleteUser = (userId) => {
+export const deleteUser = (userId: string) => {
   return User.findByIdAndDelete(userId).exec();
 };

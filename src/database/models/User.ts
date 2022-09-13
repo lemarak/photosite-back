@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
-const LEVELS = ["débutant", "confirmé", "pro"];
+const LEVELS = ["Beginner", "Intermediate", "Professional"];
 
 const userSchema = new Schema(
   {
