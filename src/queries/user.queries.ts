@@ -1,30 +1,41 @@
 const cloudinary = require("cloudinary").v2;
 
-const User = require("../database/models/User");
+import { User } from "../database/models/User";
+import { IUser } from "../interfaces";
 
-exports.getUserBySlug = (slug) => {
+export const getUserBySlug = (slug: string) => {
   return User.findOne({ "account.slug": slug }).exec();
 };
 
-exports.getUserByToken = (token) => {
+export const getUserByToken = (token: string) => {
   return User.findOne({ token }).exec();
 };
 
-exports.getUserByMail = (email) => {
+export const getUserByMail = (email: string) => {
   return User.findOne({ email }).exec();
 };
 
-exports.getUserWithOr = (email, username, slug) => {
+export const getUserWithOr = (
+  email: string,
+  username: string,
+  slug: string
+) => {
   return User.find()
     .or([{ email }, { "account.username": username }, { "account.slug": slug }])
     .exec();
 };
 
-exports.getUsers = () => {
+export const getUsers = () => {
   return User.find({});
 };
 
-exports.createUser = (fields, slug, token, hash, salt) => {
+export const createUser = (
+  fields,
+  slug: string,
+  token: string,
+  hash: string,
+  salt: string
+) => {
   const { email, username } = fields;
   const newUser = new User({
     email,
@@ -56,7 +67,7 @@ exports.createUser = (fields, slug, token, hash, salt) => {
   return User.create(newUser);
 };
 
-exports.updateUser = (fields, user) => {
+export const updateUser = (fields, user) => {
   const { firstname, lastname, city, phone, level } = fields;
   if (firstname) {
     user.account.firstname = firstname;
@@ -88,6 +99,6 @@ exports.updateUser = (fields, user) => {
   return user.save();
 };
 
-exports.deleteUser = (userId) => {
+export const deleteUser = (userId) => {
   return User.findByIdAndDelete(userId).exec();
 };

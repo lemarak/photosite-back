@@ -1,9 +1,9 @@
-const mongoose = require("mongoose");
-const schema = mongoose.Schema;
+import mongoose from "mongoose";
+const Schema = mongoose.Schema;
 
 const LEVELS = ["débutant", "confirmé", "pro"];
 
-const userSchema = schema(
+const userSchema = new Schema(
   {
     email: {
       type: String,
@@ -44,6 +44,4 @@ const userSchema = schema(
   { timestamps: true }
 );
 
-const User = mongoose.model("User", userSchema);
-
-module.exports = User;
+export const User = mongoose.model("User", userSchema);

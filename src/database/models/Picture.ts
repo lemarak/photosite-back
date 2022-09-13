@@ -1,7 +1,7 @@
-const mongoose = require("mongoose");
-const schema = mongoose.Schema;
+import mongoose from "mongoose";
+const Schema = mongoose.Schema;
 
-const pictureSchema = schema(
+const pictureSchema = new Schema(
   {
     title: {
       type: String,
@@ -22,6 +22,4 @@ const pictureSchema = schema(
   { timestamps: true }
 );
 
-const Picture = mongoose.model("Picture", pictureSchema);
-
-module.exports = Picture;
+export const Picture = mongoose.model("Picture", pictureSchema);
