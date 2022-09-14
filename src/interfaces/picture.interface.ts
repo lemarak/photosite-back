@@ -1,4 +1,6 @@
 import { Document, Types } from "mongoose";
+import { Request } from "express";
+import { IUser } from "./user.interface";
 
 export interface IPicture extends Document {
   title: string;
@@ -10,4 +12,9 @@ export interface IPicture extends Document {
 export interface PictureFormCreate {
   title: string;
   categories: string; //Todo
+}
+
+export interface IGetPicture extends Request {
+  picture: IPicture;
+  user: IUser;
 }

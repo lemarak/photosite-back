@@ -1,4 +1,5 @@
 import { Document } from "mongoose";
+import { Request } from "express";
 
 enum Level {
   Beginner = "débutant",
@@ -36,4 +37,8 @@ export interface UserFormUpdate {
   city?: string;
   phone?: string;
   level?: Level;
+}
+
+export interface IGetUserAuthenticated extends Request {
+  user: IUser;
 }

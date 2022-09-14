@@ -6,13 +6,13 @@ const router = express.Router();
 
 // controllers
 const {
-  createCategory,
+  newCategory,
   listCategories,
   updateCategory,
 } = require("../controllers/category.controllers");
 
 // create
-router.post("/category/create", createCategory);
+router.post("/category/create", newCategory);
 
 // list
 router.get("/categories", listCategories);

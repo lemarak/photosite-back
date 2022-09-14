@@ -18,7 +18,7 @@ exports.getCategoryById = (id: string) => {
   return Category.findById(id);
 };
 
-exports.updateCategory = (category: ICategory, title: string) => {
+exports.reqUpdateCategory = (category: ICategory, title: string) => {
   category.title = title;
   return category.save();
 };

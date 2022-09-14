@@ -1,15 +1,21 @@
+import { Request, Response, NextFunction } from "express";
+
 const {
   createCategory,
   getCategories,
   getCategoryByTitle,
   getCategoryById,
-  updateCategory,
+  reqUpdateCategory,
 } = require("../queries/category.queries");
 
 // Create category
-exports.createCategory = async (req, res, next) => {
+export const newCategory = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-    const { title } = req.fields;
+    const { title } = req.fields!;
     const category = await getCategoryByTitle(title);
     if (category) {
       return res.status(409).json({ error: "La catégorie existe" });
@@ -22,7 +28,11 @@ exports.createCategory = async (req, res, next) => {
 };
 
 // list categories
-exports.listCategories = async (req, res, next) => {
+export const listCategories = async (
+  _: any,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const categories = await getCategories();
     return res.status(200).json({ count: categories.length, categories });
@@ -32,13 +42,13 @@ exports.listCategories = async (req, res, next) => {
 };
 
 //   update category
-exports.updateCategory = async (req, res) => {
+export const updateCategory = async (req: Request, res: Response) => {
   try {
-    const { id, title } = req.fields;
+    const { id, title } = req.fields!;
     if (title && id) {
       const category = await getCategoryById(id);
       if (category) {
-        await updateCategory(category, title);
+        await reqUpdateCategory(category, title);
         res.status(200).json(category);
       } else {
         res.status(409).json({ error: "Pas de catégorie" });
@@ -46,7 +56,7 @@ exports.updateCategory = async (req, res) => {
     } else {
       res.status(409).json({ error: "Données manquantes" });
     }
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
 };

@@ -1,8 +1,11 @@
-const uid2 = require("uid2");
-const SHA256 = require("crypto-js/sha256");
-const encBase64 = require("crypto-js/enc-base64");
-const slugify = require("slugify");
-const createError = require("http-errors");
+import { Request, Response, NextFunction } from "express";
+import uid2 from "uid2";
+import SHA256 from "crypto-js/sha256";
+import encBase64 from "crypto-js/enc-base64";
+import slugify from "slugify";
+import createError from "http-errors";
+
+import { IGetUserAuthenticated, IUser } from "../interfaces";
 
 // queries
 const {
@@ -17,9 +20,13 @@ const {
 } = require("../queries/user.queries");
 
 // One user
-exports.userDetails = async (req, res, next) => {
+export const userDetails = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-    const user = await getUserBySlug(req.params.slug);
+    const user: IUser = await getUserBySlug(req.params.slug);
     if (user) {
       res.status(200).json(user);
     } else {
@@ -32,10 +39,10 @@ exports.userDetails = async (req, res, next) => {
 };
 
 // users list
-exports.userList = async (req, res, next) => {
+export const userList = async (_: any, res: Response, next: NextFunction) => {
   try {
     // console.log("req", req);
-    const users = await getUsers();
+    const users: IUser[] = await getUsers();
     res.status(200).json({ count: users.length, users });
   } catch (error) {
     next(error);
@@ -43,9 +50,13 @@ exports.userList = async (req, res, next) => {
 };
 
 // user update
-exports.userUpdate = async (req, res, next) => {
+export const userUpdate = async (
+  req: IGetUserAuthenticated,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-    const user = await getUserByToken(req.user.token);
+    const user: IUser = await getUserByToken(req.user.token);
     if (user) {
       await updateUser(req.fields, user);
       res.status(200).json(user);
@@ -59,10 +70,14 @@ exports.userUpdate = async (req, res, next) => {
 };
 
 // user Delete
-exports.userDelete = async (req, res, next) => {
+export const userDelete = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-    if (req.fields.id) {
-      await deleteUser(req.fields.id);
+    if (req.fields!.id) {
+      await deleteUser(req.fields!.id);
       res.status(200).json({ message: "Utilisateur supprimé" });
     } else {
       throw createError(404, "Utilisateur non trouvé");
@@ -74,17 +89,21 @@ exports.userDelete = async (req, res, next) => {
 };
 
 // user Signup
-exports.userSignup = async (req, res, next) => {
+export const userSignup = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-    const { email, username, password } = req.fields;
+    const { email, username, password } = req.fields!;
 
     if (!email || !username || !password) {
       res.status(400).json({ error: "Données manquantes" });
     } else {
-      const slug = slugify(username);
-      const user = await getUserWithOr(email, username, slug);
+      const slug = slugify(username as string);
+      const user: IUser = await getUserWithOr(email, username, slug);
 
-      if (user.length > 0) {
+      if (user) {
         res.status(409).json({ error: "L'utilisateur existe déjà" });
       } else {
         const salt = uid2(16);
@@ -101,9 +120,13 @@ exports.userSignup = async (req, res, next) => {
 };
 
 // Login
-exports.userLogin = async (req, res, next) => {
+export const userLogin = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-    const { email, password } = req.fields;
+    const { email, password } = req.fields!;
     const user = await getUserByMail(email);
     if (user) {
       const hash = SHA256(password + user.salt).toString(encBase64);
