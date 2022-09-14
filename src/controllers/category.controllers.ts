@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import { ICategory } from "../interfaces";
 
 const {
   createCategory,
@@ -20,7 +21,7 @@ export const newCategory = async (
     if (category) {
       return res.status(409).json({ error: "La catégorie existe" });
     }
-    const newCategory = await createCategory(title);
+    const newCategory: ICategory = await createCategory(title);
     res.status(200).json(newCategory);
   } catch (error) {
     next(error);
@@ -34,7 +35,7 @@ export const listCategories = async (
   next: NextFunction
 ) => {
   try {
-    const categories = await getCategories();
+    const categories: ICategory[] = (await getCategories()) || [];
     return res.status(200).json({ count: categories.length, categories });
   } catch (error) {
     next(error);
