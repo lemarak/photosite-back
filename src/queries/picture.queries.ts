@@ -23,7 +23,7 @@ exports.createPicture = async (
     categories = [];
   }
   const newPicture: IPicture = new Picture({ title, categories });
-  newPicture.owner = user;
+  newPicture.owner = user._id;
 
   const resultUpload = await cloudinary.uploader.upload(files.picture.path, {
     folder: `/photosite/pictures/${slugify(user.account.username)}`,

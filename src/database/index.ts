@@ -10,6 +10,6 @@ mongoose
   .then(() => {
     console.log("connexion ok !");
   })
-  .catch((err) => {
+  .catch((err: any) => {
     console.log(err);
   });

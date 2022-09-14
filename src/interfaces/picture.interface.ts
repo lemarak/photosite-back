@@ -1,9 +1,9 @@
-import { Document } from "mongoose";
-import { IUser } from "../interfaces/user.interface";
+import { Document, Types } from "mongoose";
+
 export interface IPicture extends Document {
   title: string;
   picture: string;
-  owner: IUser;
+  owner: Types.ObjectId;
   categories?: string; //Todo
 }
 

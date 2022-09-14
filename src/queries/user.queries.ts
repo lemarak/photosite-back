@@ -1,4 +1,4 @@
-const cloudinary = require("cloudinary").v2;
+// const cloudinary = require("cloudinary").v2;
 
 import { User } from "../database/models/User";
 import { IUser, UserFormCreate, UserFormUpdate } from "../interfaces";

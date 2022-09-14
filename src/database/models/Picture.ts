@@ -1,7 +1,9 @@
 import mongoose from "mongoose";
+import { IPicture } from "../../interfaces";
+
 const Schema = mongoose.Schema;
 
-const pictureSchema = new Schema(
+const pictureSchema = new Schema<IPicture>(
   {
     title: {
       type: String,
@@ -10,8 +12,7 @@ const pictureSchema = new Schema(
       maxlength: [49, "Le titre doit avoir moins de 50 caractères"],
     },
     picture: {
-      type: mongoose.Schema.Types.Mixed,
-      default: {},
+      type: String,
     },
     owner: {
       type: mongoose.Schema.Types.ObjectId,
@@ -22,4 +23,4 @@ const pictureSchema = new Schema(
   { timestamps: true }
 );
 
-export const Picture = mongoose.model("Picture", pictureSchema);
+export const Picture = mongoose.model<IPicture>("Picture", pictureSchema);

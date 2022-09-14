@@ -1,9 +1,12 @@
 import mongoose from "mongoose";
+
+import { IUser } from "../../interfaces";
+
 const Schema = mongoose.Schema;
 
 const LEVELS = ["Beginner", "Intermediate", "Professional"];
 
-const userSchema = new Schema(
+const userSchema = new Schema<IUser>(
   {
     email: {
       type: String,
@@ -32,8 +35,7 @@ const userSchema = new Schema(
       city: String,
       phone: String,
       avatar: {
-        type: mongoose.Schema.Types.Mixed,
-        default: {},
+        type: String,
       },
       level: [{ type: String, enum: LEVELS }],
     },
@@ -44,4 +46,4 @@ const userSchema = new Schema(
   { timestamps: true }
 );
 
-export const User = mongoose.model("User", userSchema);
+export const User = mongoose.model<IUser>("User", userSchema);
