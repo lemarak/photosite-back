@@ -3,7 +3,6 @@ import express from "express";
 const router = express.Router();
 
 const isAuthenticated = require("../middleware/isAuthenticated");
-// Controllers
 const {
   userDetails,
   userList,

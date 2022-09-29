@@ -41,7 +41,6 @@ export const userDetails = async (
 // users list
 export const userList = async (_: any, res: Response, next: NextFunction) => {
   try {
-    // console.log("req", req);
     const users: IUser[] = await getUsers();
     res.status(200).json({ count: users.length, users });
   } catch (error) {
@@ -95,7 +94,6 @@ export const userSignup = async (
   next: NextFunction
 ) => {
   try {
-    console.log(req.body);
     const { email, username, password } = req.body;
 
     if (!email || !username || !password) {
@@ -103,7 +101,6 @@ export const userSignup = async (
     } else {
       const slug = slugify(username as string);
       const user: IUser = await getUserWithOr(email, username, slug);
-      console.log("user :", user);
       if (user) {
         res.status(409).json({ error: "L'utilisateur existe déjà" });
       } else {
@@ -127,7 +124,6 @@ export const userLogin = async (
   next: NextFunction
 ) => {
   try {
-    console.log(req.body);
     const { email, password } = req.body;
     const user = await getUserByMail(email);
     if (user) {
