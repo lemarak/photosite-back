@@ -1,5 +1,3 @@
-// const cloudinary = require("cloudinary").v2;
-
 import { User } from "../database/models/User";
 import { IUser, UserFormCreate, UserFormUpdate } from "../interfaces";
 
@@ -53,17 +51,6 @@ export const createUser = (
     },
   });
 
-  // cloudinary
-  // if (req.files.avatar.size) {
-  //   const resultUpload = await cloudinary.uploader.upload(
-  //     req.files.avatar.path,
-  //     {
-  //       folder: `/photosite/users/${slugify(username)}`,
-  //     }
-  //   );
-  //   newUser.account.avatar = resultUpload;
-  // }
-
   return User.create(newUser);
 };
 
@@ -84,17 +71,6 @@ export const updateUser = (fields: UserFormUpdate, user: IUser) => {
   if (level) {
     user.account.level = level;
   }
-  // cloudinary
-  // console.log(req.files.avatar);
-  // if (req.files.avatar.size > 0) {
-  //   const resultUpload = await cloudinary.uploader.upload(
-  //     req.files.avatar.path,
-  //     {
-  //       folder: `/photosite/users/${user.account.slug}`,
-  //     }
-  //   );
-  //   user.account.avatar = resultUpload;
-  // }
 
   return user.save();
 };

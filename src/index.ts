@@ -2,8 +2,7 @@ import express, { Application, Request, Response } from "express";
 import formidable from "express-formidable";
 import cors from "cors";
 import errorHandler from "errorhandler";
-// const cloudinary = require("cloudinary").v2;
-import * as cloudinary from "cloudinary";
+const path = require("path");
 import "dotenv/config";
 import "./database";
 import index from "./routes";
@@ -11,27 +10,20 @@ import index from "./routes";
 const app: Application = express();
 const port: string | number = process.env.PORT || 3100;
 app.use(formidable());
+app.use(express.static(path.join(__dirname, "public")));
 app.use(cors());
-
-// cloudinary
-cloudinary.v2.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
 
 // Routes
 app.use(index);
 
 // Middleware Error
-
 if (process.env.NODE_ENV === "developpment") {
   app.use(errorHandler());
 }
 
 app.use((err: any, _: Request, res: Response) => {
   const env = process.env.NODE_ENV;
-  console.error("Error");
+  console.error(err.message);
   if (env === "production") {
     res.status(500).json({
       code: err.code || 500,

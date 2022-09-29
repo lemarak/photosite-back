@@ -1,18 +1,15 @@
-const cloudinary = require("cloudinary").v2;
-import slugify from "slugify";
-
 import { Picture } from "../database/models/Picture";
 import { IPicture, PictureFormCreate } from "../interfaces/picture.interface";
 import { IUser } from "../interfaces/user.interface";
 
-exports.getPictures = () => {
+export const getPictures = () => {
   return Picture.find();
 };
 
-exports.createPicture = async (
+export const createPicture = async (
   fields: PictureFormCreate,
   user: IUser,
-  files: any
+  filePath: string
 ) => {
   const { title } = fields;
   let categories: string[];
@@ -25,9 +22,6 @@ exports.createPicture = async (
   const newPicture: IPicture = new Picture({ title, categories });
   newPicture.owner = user._id;
 
-  const resultUpload = await cloudinary.uploader.upload(files.picture.path, {
-    folder: `/photosite/pictures/${slugify(user.account.username)}`,
-  });
-  newPicture.picture = resultUpload;
+  newPicture.picture = filePath;
   return Picture.create(newPicture);
 };
