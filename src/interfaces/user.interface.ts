@@ -14,7 +14,6 @@ export interface IAccount {
   lastname?: string;
   city?: string;
   phone?: string;
-  avatar?: string;
   level?: Level;
 }
 

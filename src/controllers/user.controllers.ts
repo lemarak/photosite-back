@@ -102,7 +102,7 @@ export const userSignup = async (
     } else {
       const slug = slugify(username as string);
       const user: IUser = await getUserWithOr(email, username, slug);
-
+      console.log("user :", user);
       if (user) {
         res.status(409).json({ error: "L'utilisateur existe déjà" });
       } else {

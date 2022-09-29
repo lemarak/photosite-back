@@ -21,17 +21,6 @@ if (process.env.NODE_ENV === "developpment") {
   app.use(errorHandler());
 }
 
-app.use((err: any, _: Request, res: Response) => {
-  const env = process.env.NODE_ENV;
-  console.error(err.message);
-  if (env === "production") {
-    res.status(500).json({
-      code: err.code || 500,
-      message: err.message,
-    });
-  }
-});
-
 app.get("/", (_: Request, res: Response) => {
   res.status(200).json({ message: "Hello, welcome on PhotoSite" });
 });

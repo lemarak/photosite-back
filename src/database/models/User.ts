@@ -34,9 +34,6 @@ const userSchema = new Schema<IUser>(
       },
       city: String,
       phone: String,
-      avatar: {
-        type: String,
-      },
       level: [{ type: String, enum: LEVELS }],
     },
     token: String,

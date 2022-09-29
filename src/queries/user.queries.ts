@@ -18,7 +18,7 @@ export const getUserWithOr = (
   username: string,
   slug: string
 ) => {
-  return User.find()
+  return User.findOne()
     .or([{ email }, { "account.username": username }, { "account.slug": slug }])
     .exec();
 };
