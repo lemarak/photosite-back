@@ -16,7 +16,7 @@ export const newCategory = async (
   next: NextFunction
 ) => {
   try {
-    const { title } = req.fields!;
+    const { title } = req.body;
     const category = await getCategoryByTitle(title);
     if (category) {
       return res.status(409).json({ error: "La catégorie existe" });
@@ -45,7 +45,7 @@ export const listCategories = async (
 //   update category
 export const updateCategory = async (req: Request, res: Response) => {
   try {
-    const { id, title } = req.fields!;
+    const { id, title } = req.body;
     if (title && id) {
       const category = await getCategoryById(id);
       if (category) {

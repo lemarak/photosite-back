@@ -58,7 +58,7 @@ export const userUpdate = async (
   try {
     const user: IUser = await getUserByToken(req.user.token);
     if (user) {
-      await updateUser(req.fields, user);
+      await updateUser(req.body, user);
       res.status(200).json(user);
     } else {
       throw createError(404, "Utilisateur non trouvé");
@@ -76,8 +76,8 @@ export const userDelete = async (
   next: NextFunction
 ) => {
   try {
-    if (req.fields!.id) {
-      await deleteUser(req.fields!.id);
+    if (req.body!.id) {
+      await deleteUser(req.body.id);
       res.status(200).json({ message: "Utilisateur supprimé" });
     } else {
       throw createError(404, "Utilisateur non trouvé");
@@ -95,7 +95,8 @@ export const userSignup = async (
   next: NextFunction
 ) => {
   try {
-    const { email, username, password } = req.fields!;
+    console.log(req.body);
+    const { email, username, password } = req.body;
 
     if (!email || !username || !password) {
       res.status(400).json({ error: "Données manquantes" });
@@ -110,7 +111,7 @@ export const userSignup = async (
         const hash = SHA256(password + salt).toString(encBase64);
         const token = uid2(16);
 
-        const newUser = await createUser(req.fields, slug, token, hash, salt);
+        const newUser = await createUser(req.body, slug, token, hash, salt);
         res.status(200).json(newUser);
       }
     }
@@ -126,7 +127,8 @@ export const userLogin = async (
   next: NextFunction
 ) => {
   try {
-    const { email, password } = req.fields!;
+    console.log(req.body);
+    const { email, password } = req.body;
     const user = await getUserByMail(email);
     if (user) {
       const hash = SHA256(password + user.salt).toString(encBase64);

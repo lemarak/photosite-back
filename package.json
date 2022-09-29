@@ -12,7 +12,6 @@
   "author": "Stéphane Dauguet",
   "license": "ISC",
   "dependencies": {
-    "cors": "^2.8.5",
     "crypto-js": "^4.1.1",
     "dotenv": "^10.0.0",
     "errorhandler": "^1.5.1",
@@ -25,11 +24,9 @@
     "uid2": "^1.0.0"
   },
   "devDependencies": {
-    "@types/cors": "^2.8.12",
     "@types/crypto-js": "^4.1.0",
     "@types/errorhandler": "^1.5.0",
     "@types/express": "^4.17.13",
-    "@types/express-formidable": "^1.2.0",
     "@types/http-errors": "^1.8.2",
     "@types/mongoose": "^5.11.97",
     "@types/multer": "^1.4.7",

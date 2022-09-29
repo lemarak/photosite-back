@@ -44,20 +44,21 @@ export const publishPicture = async (
   upload.single("picture");
   try {
     // no picture
-    console.log(req.files);
+    console.log(req.body);
+
     if (!req.files) {
       return res.status(400).json({ message: "no picture" });
     }
 
     // missing fields
-    if (!req.fields) {
+    if (!req.body) {
       return res.status(400).json({ message: "missing fields" });
     }
     // fields ok
 
-    const filePath: string = `img/pictures/${req.files!.filename}`;
+    const filePath: string = `/img/pictures/${req.files}`;
     const newPicture: IPicture = await createPicture(
-      req.fields,
+      req.body,
       req.user,
       filePath
     );
