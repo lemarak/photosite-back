@@ -1,6 +1,5 @@
 import express, { Application, Request, Response } from "express";
-
-// import cors from "cors";
+import cors from "cors";
 import errorHandler from "errorhandler";
 const path = require("path");
 import "dotenv/config";
@@ -12,8 +11,7 @@ const port: string | number = process.env.PORT || 3100;
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// app.use(cors());
+app.use(cors());
 
 // Routes
 app.use(index);
