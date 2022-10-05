@@ -25,9 +25,14 @@ export interface IUser extends Document {
   salt: string;
 }
 
-export interface UserFormCreate {
+export interface IUserFormCreate {
   email: string;
   username: string;
+  firstname?: string;
+  lastname?: string;
+  city?: string;
+  phone?: string;
+  level?: Level;
 }
 
 export interface UserFormUpdate {

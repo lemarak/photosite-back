@@ -1,5 +1,5 @@
 import { User } from "../database/models/User";
-import { IUser, UserFormCreate, UserFormUpdate } from "../interfaces";
+import { IUser, IUserFormCreate, UserFormUpdate } from "../interfaces";
 
 export const getUserBySlug = (slug: string) => {
   return User.findOne({ "account.slug": slug }).exec();
@@ -28,13 +28,13 @@ export const getUsers = () => {
 };
 
 export const createUser = (
-  fields: UserFormCreate,
+  fields: IUserFormCreate,
   slug: string,
   token: string,
   hash: string,
   salt: string
 ) => {
-  const { email, username } = fields;
+  const { email, username, firstname, lastname, city, phone } = fields;
   const newUser = new User({
     email,
     token,
@@ -43,10 +43,10 @@ export const createUser = (
     account: {
       username,
       slug,
-      // firstname,
-      // lastname,
-      // city,
-      // phone,
+      firstname,
+      lastname,
+      city,
+      phone,
       // level,
     },
   });
