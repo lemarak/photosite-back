@@ -1,7 +1,7 @@
 import { Response, NextFunction } from "express";
 
-import { User } from "../database/models/User";
-import { IGetUserAuthenticated } from "../interfaces";
+import { IGetUserAuthenticated, IUser } from "../interfaces";
+import { getUserByToken } from "../queries/user.queries";
 
 const isAuthenticated = async (
   req: IGetUserAuthenticated,
@@ -10,9 +10,9 @@ const isAuthenticated = async (
 ) => {
   try {
     if (req.headers.authorization) {
-      const user = await User.findOne({
-        token: req.headers.authorization.replace("Bearer ", ""),
-      });
+      const user: IUser | null = await getUserByToken(
+        req.headers.authorization.replace("Bearer ", "")
+      );
       if (!user) {
         return res.status(401).json({ error: "Unauthorized" });
       } else {

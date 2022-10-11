@@ -2,15 +2,15 @@ import { User } from "../database/models/User";
 import { IUser, IUserFormCreate, UserFormUpdate } from "../interfaces";
 
 export const getUserBySlug = (slug: string) => {
-  return User.findOne({ "account.slug": slug }).exec();
+  return User.findOne({ "account.slug": slug });
 };
 
 export const getUserByToken = (token: string) => {
-  return User.findOne({ token }).exec();
+  return User.findOne({ token });
 };
 
 export const getUserByMail = (email: string) => {
-  return User.findOne({ email }).exec();
+  return User.findOne({ email });
 };
 
 export const getUserWithOr = (
@@ -18,9 +18,11 @@ export const getUserWithOr = (
   username: string,
   slug: string
 ) => {
-  return User.findOne()
-    .or([{ email }, { "account.username": username }, { "account.slug": slug }])
-    .exec();
+  return User.findOne().or([
+    { email },
+    { "account.username": username },
+    { "account.slug": slug },
+  ]);
 };
 
 export const getUsers = () => {

@@ -61,7 +61,6 @@ export const userUpdate = async (
       res.status(200).json(user);
     } else {
       throw createError(404, "Utilisateur non trouvé");
-      // res.status(404).json({ error: "Utilisateur non trouvé" });
     }
   } catch (error) {
     next(error);
@@ -80,7 +79,6 @@ export const userDelete = async (
       res.status(200).json({ message: "Utilisateur supprimé" });
     } else {
       throw createError(404, "Utilisateur non trouvé");
-      // res.status(500).json({ error: "Pas d'utilisateurs avec l'id" });
     }
   } catch (error) {
     next(error);
@@ -95,8 +93,9 @@ export const userSignup = async (
 ) => {
   try {
     const { email, username, password } = req.body;
-
+    console.log(req.body);
     if (!email || !username || !password) {
+      console.log(`${email}, ${username}, ${password}`);
       res.status(400).json({ error: "Données manquantes" });
     } else {
       const slug = slugify(username as string);
@@ -108,7 +107,13 @@ export const userSignup = async (
         const hash = SHA256(password + salt).toString(encBase64);
         const token = uid2(16);
 
-        const newUser = await createUser(req.body, slug, token, hash, salt);
+        const newUser: IUser = await createUser(
+          req.body,
+          slug,
+          token,
+          hash,
+          salt
+        );
         res.status(200).json(newUser);
       }
     }
@@ -134,8 +139,7 @@ export const userLogin = async (
         res.status(200).json({ user });
       }
     } else {
-      throw createError(404, "Utilisateur non connu");
-      // res.status(403).json({ message: "Utilisateur non connu" });
+      res.status(403).json({ message: "Utilisateur non connu" });
     }
   } catch (error) {
     next(error);
