@@ -93,15 +93,13 @@ export const userSignup = async (
 ) => {
   try {
     const { email, username, password } = req.body;
-    console.log(req.body);
     if (!email || !username || !password) {
-      console.log(`${email}, ${username}, ${password}`);
-      res.status(400).json({ error: "Données manquantes" });
+      res.status(400).json({ message: "Données manquantes" });
     } else {
       const slug = slugify(username as string);
       const user: IUser = await getUserWithOr(email, username, slug);
       if (user) {
-        res.status(409).json({ error: "L'utilisateur existe déjà" });
+        res.status(409).json({ message: "L'utilisateur existe déjà" });
       } else {
         const salt = uid2(16);
         const hash = SHA256(password + salt).toString(encBase64);
@@ -114,7 +112,7 @@ export const userSignup = async (
           hash,
           salt
         );
-        res.status(200).json(newUser);
+        res.status(200).json({ newUser });
       }
     }
   } catch (error) {
