@@ -1,4 +1,5 @@
 import express from "express";
+import { upload } from "../middleware/multer";
 
 const router = express.Router();
 
@@ -14,6 +15,11 @@ const {
 router.get("/pictures", listPictures);
 
 // publish picture
-router.post("/picture/publish", isAuthenticated, publishPicture);
+router.post(
+  "/picture/publish",
+  isAuthenticated,
+  upload.single("picture"),
+  publishPicture
+);
 
 export default router;

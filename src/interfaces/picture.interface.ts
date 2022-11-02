@@ -1,8 +1,8 @@
-import { Document, Types } from "mongoose";
+import { Types } from "mongoose";
 import { Request } from "express";
 import { IUser } from "./user.interface";
 
-export interface IPicture extends Document {
+export interface IPicture {
   title: string;
   picture: string;
   owner: Types.ObjectId;
